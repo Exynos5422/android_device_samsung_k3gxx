@@ -73,6 +73,11 @@ PRODUCT_PACKAGES += \
     libfimg \
     gralloc.exynos5 \
 
+# Bluetooth
+PRODUCT_COPY_FILES += \
+	$(LOCAL_PATH)/bluetooth/bt_did.conf:system/etc/bluetooth/bt_did.conf \
+	$(LOCAL_PATH)/bluetooth/bt_vendor.conf:system/etc/bluetooth/bt_vendor.conf
+
 # Consumerir
 PRODUCT_PACKAGES += \
     consumerir.universal5422
