@@ -29,6 +29,8 @@ telephony.lteOnCdmaDevice=0
 camera2.portability.force_api=1
 media.stagefright.legacyencoder=true
 media.stagefright.less-secure=true
+#force HAL1 for some apps
+camera.hal1.packagelist=org.codeaurora.snapcam,com.snapchat.android
 
 # Wifi
 wlan.wfd.hdcp=disable
