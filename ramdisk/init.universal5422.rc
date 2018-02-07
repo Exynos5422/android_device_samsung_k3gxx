@@ -14,12 +14,45 @@ on init
 
     export LD_SHIM_LIBS "/system/bin/gpsd|libshim.so"
 
-    mkdir /preload 0771 system system
+    # See storage config details at http://source.android.com/tech/storage/
+    mkdir /mnt/media_rw/extSdCard 0700 media_rw media_rw
+    mkdir /mnt/media_rw/UsbDriveA 0700 media_rw media_rw
+    mkdir /mnt/media_rw/UsbDriveB 0700 media_rw media_rw
+    mkdir /mnt/media_rw/UsbDriveC 0700 media_rw media_rw
+    mkdir /mnt/media_rw/UsbDriveD 0700 media_rw media_rw
+    mkdir /mnt/media_rw/UsbDriveE 0700 media_rw media_rw
+    mkdir /mnt/media_rw/UsbDriveF 0700 media_rw media_rw
+
+    # See storage config details at http://source.android.com/tech/storage/     
+    mkdir /mnt/shell/emulated 0700 shell shell
+    mkdir /storage/emulated 0555 root root
 
 # RIL <-> audioserver comm
     chmod 0644 /proc/cmdline
 
     symlink /sdcard /mnt/sdcard
+
+    export EXTERNAL_STORAGE /sdcard
+
+    # map "real" external storages paths also in same way. backwards compatibility.
+    symlink /storage/extSdCard /mnt/extSdCard
+    symlink /storage/UsbDriveA /mnt/UsbDriveA
+    symlink /storage/UsbDriveB /mnt/UsbDriveB
+    symlink /storage/UsbDriveC /mnt/UsbDriveC
+    symlink /storage/UsbDriveD /mnt/UsbDriveD
+    symlink /storage/UsbDriveE /mnt/UsbDriveE
+    symlink /storage/UsbDriveF /mnt/UsbDriveF
+
+    export SECONDARY_STORAGE /storage/extSdCard
+
+    mkdir /storage/extSdCard 0700 root root
+    mkdir /storage/UsbDriveA 0700 root root
+    mkdir /storage/UsbDriveB 0700 root root
+    mkdir /storage/UsbDriveC 0700 root root
+    mkdir /storage/UsbDriveD 0700 root root
+    mkdir /storage/UsbDriveE 0700 root root
+    mkdir /storage/UsbDriveF 0700 root root
+
     symlink /sdcard /storage/sdcard0
 
     symlink /data/app /factory
@@ -32,6 +65,8 @@ on init
 
 on post-fs-data
     mkdir /data/media 0770 media_rw media_rw
+
+    setprop vold.post_fs_data_done 1
 
     # Permission for flashlight control for HAL3.3
     chmod 0660 /sys/class/camera/flash/rear_torch_flash
@@ -110,7 +145,7 @@ on boot
     chmod 0600 /dev/btlock
     chown bluetooth bluetooth /dev/btlock
 
-	# DualWave
+    # DualWave
     chown system system /sys/kernel/DualWave/sound/DUALWAVE_CONFIG
 
     # override init.rc to keep plenty of large order chunks around
@@ -250,6 +285,8 @@ on charger
     # Do not set any USB mode while charging
     setprop sys.usb.config charging
 
+    # WLAN
+    write /proc/sys/net/ipv4/tcp_adv_win_scale  2
 
 on fs
     mount_all /fstab.universal5422
@@ -266,7 +303,7 @@ on fs
       
     wait /dev/block/mmcblk0p16
 
-    mount ext4 /dev/block/mmcblk0p16 /persdata/absolute nosuid nodev barrier=1 
+    mount ext4 /dev/block/mmcblk0p16 /persdata/absolute nosuid nodev noatime noauto_da_alloc,discard,journal_async_commit,errors=panic
 
     chown system system /persdata
     chmod 0755 /persdata
@@ -402,9 +439,9 @@ on fs
     chown system system /sys/class/mdnie/mdnie/auto_brightness
     chown system system /sys/class/mdnie/mdnie/sensorRGB
 
-# MTP permission
+# MTP device permission
     chmod 0660 /dev/usb_mtp_gadget
-    chown system mtp /dev/usb_mtp_gadget
+    chown system system /dev/usb_mtp_gadget
 
 # Permissions for TouchScreen
     chown system radio /sys/class/sec/tsp/cmd
@@ -498,7 +535,6 @@ service cs_service /system/bin/cs
     class main
     user system
     group system
-    disabled
 
 on property:sys.mobicoredaemon.enable=true
     start cs_service

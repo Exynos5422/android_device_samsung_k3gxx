@@ -43,8 +43,8 @@ TARGET_SCREEN_HEIGHT := 1920
 TARGET_SCREEN_WIDTH := 1080
 
 # Camera
-#PRODUCT_PACKAGES += \
-#    SnapdragonCamera
+PRODUCT_PACKAGES += \
+    Camera2
 
 # Display
 PRODUCT_PACKAGES += \

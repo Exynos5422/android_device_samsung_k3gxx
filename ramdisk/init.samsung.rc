@@ -36,10 +36,6 @@ on init
 # ]
     mkdir /mnt/media_rw 0771 media_rw media_rw
     mkdir /storage 0751 root sdcard_r
-    
-## Samsung ODE >>>
-    # Create private mountpoint so we can MS_MOVE from staging
-    mount tmpfs tmpfs /mnt/secure mode=0700,uid=0,gid=0
 
     # Directory for staging bindmounts
     mkdir /mnt/secure/staging 0700 root root
@@ -342,7 +338,10 @@ on boot
     export MC_AUTH_TOKEN_PATH /efs
 
     chown system system /sys/class/timed_output/vibrator/intensity
-    
+
+    # MirrorLink permission
+    mkdir /dev/socket/mlaudio 0770 audioserver system
+
 #permission for TSP, Touchkey and Wacom
     chown system radio /sys/class/sec/tsp/cmd
     chmod 0660 /sys/class/sec/tsp/input/enabled
@@ -519,7 +518,7 @@ on boot
 # Gyro_sensor
     chown system radio /sys/class/sensors/gyro_sensor/power_on
     chown system radio /sys/class/sensors/gyro_sensor/power_off
-    chown system radio /sys/class/sensors/gyro_sensor/temperature
+    chown system media /sys/class/sensors/gyro_sensor/temperature
     chown system radio /sys/class/sensors/gyro_sensor/selftest
     chown system radio /sys/class/sensors/gyro_sensor/selftest_dps
     chown system radio /sys/class/sensors/gyro_sensor/vendor
