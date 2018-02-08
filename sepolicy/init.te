@@ -21,9 +21,10 @@ allow init mediaserver:process { noatsecure };
 allow init debugfs:dir mounton;
 allow init debugfs:file write;
 
-# read/chown camera firmware
-allow init sysfs_camera_writable:file { relabelto setattr };
-allow init sysfs_camera_writable:filesystem associate;
+# denied { setattr relabelto } name="rear_camfw"
+allow init camera_device:file { relabelto setattr };
+allow init camera_device:lnk_file { read relabelto };
+allow init camera_device:dir relabelto;
 
 #rild-cas
 allow init socket_device:sock_file { create setattr unlink write };
