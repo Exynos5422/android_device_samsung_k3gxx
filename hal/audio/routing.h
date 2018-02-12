@@ -51,7 +51,7 @@ struct route_config {
 
 const struct route_config voice_speaker = {
     "voice-speaker",
-    "voice-speaker-main-mic"
+    "voice-main-mic"
 };
 
 const struct route_config voice_speaker_wb = {
